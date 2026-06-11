@@ -1,5 +1,5 @@
 #include "../hitags_test_i.h"
-#include <assets_icons.h>
+#include <hitags_test_icons.h>
 
 void hitags_test_scene_write_success_on_enter(void* context) {
     HitagSTest* app = context;

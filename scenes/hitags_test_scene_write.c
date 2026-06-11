@@ -1,5 +1,5 @@
 #include "../hitags_test_i.h"
-#include <assets_icons.h>
+#include <hitags_test_icons.h>
 
 #define VERIFY_FLAG_BIT (1u << 0)
 

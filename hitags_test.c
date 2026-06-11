@@ -1,5 +1,5 @@
 #include "hitags_test_i.h"
-#include <assets_icons.h>
+#include <hitags_test_icons.h>
 
 static bool hitags_test_custom_event_callback(void* context, uint32_t event) {
     furi_assert(context);
