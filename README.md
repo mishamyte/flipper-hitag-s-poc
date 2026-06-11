@@ -94,7 +94,7 @@ the verify decoder.
 
 Targets **Unleashed** firmware (it reuses Unleashed's Hitag-micro EM4100 write-type
 `LFRFIDWriteTypeHitagMicro` as the EM4100 encoder, so it does **not** build against stock OFW
-unaltered; RogueMaster, which carries the same feature, also works).
+unaltered).
 
 In-tree (recommended): drop this folder into an Unleashed checkout under `applications_user/`
 and build the FAP:
