@@ -1,0 +1,16 @@
+App(
+    appid="hitags_test",
+    name="Hitag S PoC",
+    apptype=FlipperAppType.EXTERNAL,
+    targets=["f7"],
+    entry_point="hitags_test_app",
+    icon="A_125khz_14",
+    stack_size=4 * 1024,
+    order=30,
+    fap_description="Experimental writer: clone an EM4100 id onto a plain-mode Hitag S tag (pages 4/5), verified by reading it back as EM4100. No password.",
+    fap_version="0.1",
+    fap_author="Mykhailo Shevchuk",
+    fap_icon="icon.png",
+    fap_icon_assets="assets",
+    fap_category="RFID",
+)
