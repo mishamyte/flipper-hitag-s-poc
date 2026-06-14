@@ -22,7 +22,7 @@
 #include "hitags.h"
 #include "scenes/hitags_test_scene.h"
 
-#define HITAGS_TEST_APP_FOLDER ANY_PATH("lfrfid")
+#define HITAGS_TEST_APP_FOLDER     ANY_PATH("lfrfid")
 #define HITAGS_TEST_FILE_EXTENSION ".rfid"
 
 // EM4100 id is 5 bytes; keep a little headroom.
@@ -32,7 +32,7 @@
 // before it even starts decoding, and EM4100 needs several validated reads, so the window
 // must comfortably exceed that (the stock worker uses 2000ms for its own write-verify).
 #define HITAGS_TEST_VERIFY_TIMEOUT_MS 2000 // EM4100 read window per attempt
-#define HITAGS_TEST_MAX_ATTEMPTS 30 // give up after this many write+verify passes
+#define HITAGS_TEST_MAX_ATTEMPTS      30 // give up after this many write+verify passes
 
 enum HitagSTestCustomEvent {
     HitagSTestEventWriteOK = 100,

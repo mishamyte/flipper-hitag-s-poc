@@ -15,10 +15,8 @@ static const uint8_t HITAGS_TEST_KNOWN_UID[4] = {0x95, 0x3A, 0x45, 0xED}; // set
 
 // Runs in the worker thread (started by lfrfid_worker_read_start). On a decoded card,
 // compares it to the id we intended to write and unblocks the write thread.
-static void hitags_test_verify_callback(
-    LFRFIDWorkerReadResult result,
-    ProtocolId protocol,
-    void* context) {
+static void
+    hitags_test_verify_callback(LFRFIDWorkerReadResult result, ProtocolId protocol, void* context) {
     HitagSTest* app = context;
 
     if(result != LFRFIDWorkerReadDone) return;
@@ -67,7 +65,8 @@ static bool hitags_test_verify(HitagSTest* app) {
     lfrfid_worker_stop_thread(app->worker); // joins -> TIM1 released before we return
 
     if((flags & VERIFY_FLAG_BIT) == 0) {
-        FURI_LOG_D("HitagSTest", "verify: nothing read within %dms", HITAGS_TEST_VERIFY_TIMEOUT_MS);
+        FURI_LOG_D(
+            "HitagSTest", "verify: nothing read within %dms", HITAGS_TEST_VERIFY_TIMEOUT_MS);
     }
     return app->verify_match;
 }
@@ -148,8 +147,7 @@ void hitags_test_scene_write_on_enter(void* context) {
 
     app->write_stop = false;
     furi_check(app->write_thread == NULL); // a previous write must have been joined first
-    app->write_thread =
-        furi_thread_alloc_ex("HitagSWrite", 4096, hitags_test_write_thread, app);
+    app->write_thread = furi_thread_alloc_ex("HitagSWrite", 4096, hitags_test_write_thread, app);
     furi_thread_start(app->write_thread);
 }
 
@@ -171,15 +169,21 @@ bool hitags_test_scene_write_on_event(void* context, SceneManagerEvent event) {
             consumed = true;
         } else if(event.event == HitagSTestEventWriteFailed) {
             hitags_test_show_error(
-                app, "Not written", "Tag did not\nverify as EM4100.\nHold it on the\nantenna & retry.");
+                app,
+                "Not written",
+                "Tag did not\nverify as EM4100.\nHold it on the\nantenna & retry.");
             consumed = true;
         } else if(event.event == HitagSTestEventEncodeFailed) {
             hitags_test_show_error(
-                app, "Encode error", "Could not encode\nthe EM4100 id.\nThis is not a\ntag/antenna issue.");
+                app,
+                "Encode error",
+                "Could not encode\nthe EM4100 id.\nThis is not a\ntag/antenna issue.");
             consumed = true;
         } else if(event.event == HitagSTestEventUidReadFailed) {
             hitags_test_show_error(
-                app, "No UID", "Couldn't read the\ntag UID. On-device\nUID read is WIP -\nnothing written.");
+                app,
+                "No UID",
+                "Couldn't read the\ntag UID. On-device\nUID read is WIP -\nnothing written.");
             consumed = true;
         } else if(event.event == HitagSTestEventStillTrying) {
             // keep the "Writing" screen; nothing to do

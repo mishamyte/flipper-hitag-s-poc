@@ -8,8 +8,8 @@
 // Reader->tag command codes (Proxmark3 include/protocols.h), as transmitted.
 // ============================================================================
 #define HITAGS_CMD_UID_REQ_ADV1 0xC8 // 11001, 5 bits (advanced UID request)
-#define HITAGS_CMD_SELECT 0x00 // 00000, 5 bits
-#define HITAGS_CMD_WRITE_PAGE 0x80 // 1000,  4 bits (top nibble of 0x80)
+#define HITAGS_CMD_SELECT       0x00 // 00000, 5 bits
+#define HITAGS_CMD_WRITE_PAGE   0x80 // 1000,  4 bits (top nibble of 0x80)
 
 // ============================================================================
 // Reader->tag BPLM/OOK modulation timings (us). Identical to the Hitag micro
@@ -18,21 +18,21 @@
 // code violation=36T0=288us. Each cell = a leading field-off gap then field-on;
 // a '1' holds the field on longer than a '0'. Manchester is only tag->reader.
 // ============================================================================
-#define HITAGS_GAP_US 64 // T_LOW leading gap of every cell
+#define HITAGS_GAP_US     64 // T_LOW leading gap of every cell
 #define HITAGS_BIT0_ON_US 96 // T_0 - T_LOW: field-on tail of a '0'
 #define HITAGS_BIT1_ON_US 160 // T_1 - T_LOW: field-on tail of a '1'
-#define HITAGS_CHARGE_US 3000 // charge before the first frame
+#define HITAGS_CHARGE_US  3000 // charge before the first frame
 
 // Open-loop inter-frame waits. The tag is transmitting (and DEAF) during its whole response,
 // so each wait must span twresp (~1.7ms) + the full response + twsc (>=0.72ms) before the next
 // frame, or the tag never hears it (HITAG S datasheet sec. 9.2/9.4/9.5). Selected-state
 // responses are Manchester @ ~4 kBit.
-#define HITAGS_WAIT_UIDRESP_US 22000 // UID response ~18ms (32b AC @2kBit) + twresp + twsc
-#define HITAGS_WAIT_SELECT_US 15000 // config response ~10ms (40b MC @4kBit) + twresp + twsc
-#define HITAGS_WAIT_WRITECMD_US 5000 // WRITE PAGE ACK (short) + twresp + twsc
+#define HITAGS_WAIT_UIDRESP_US   22000 // UID response ~18ms (32b AC @2kBit) + twresp + twsc
+#define HITAGS_WAIT_SELECT_US    15000 // config response ~10ms (40b MC @4kBit) + twresp + twsc
+#define HITAGS_WAIT_WRITECMD_US  5000 // WRITE PAGE ACK (short) + twresp + twsc
 #define HITAGS_WAIT_WRITEDATA_US 30000 // tprog ~5.7ms + ACK + twsc (within twsc max 40ms)
-#define HITAGS_POWERDOWN_US 20000 // field off between passes so the tag resets
-#define HITAGS_COLD_RESET_US 100000 // long field-off so a warm/emitting tag fully resets
+#define HITAGS_POWERDOWN_US      20000 // field off between passes so the tag resets
+#define HITAGS_COLD_RESET_US     100000 // long field-off so a warm/emitting tag fully resets
 
 // ============================================================================
 // One-shot UID read (tag->reader). EXPERIMENTAL - see the note in hitags_read_uid.
@@ -42,19 +42,20 @@
 // UID). The decoder mirrors PM3 hitag_reader_receive_frame() AC2K: classify the time between
 // falling edges by half-period (128us) multiples. Thresholds are PM3's midpoint captures (us).
 #define HITAGS_UID_LISTEN_US 22000 // capture window - must cover the ~21ms-long response
-#define HITAGS_UID_WARMUP_REQS 20 // UID requests to keep the tag modulating so the detector settles
-#define HITAGS_UID_BITS 32 // a Hitag S UID is 32 bits
-#define HITAGS_UID_SOF_BITS 3 // ADV UID response SOF is '111'
-#define HITAGS_UID_CAPTURE_MAX 256 // captured edge count cap
+#define HITAGS_UID_WARMUP_REQS \
+    20 // UID requests to keep the tag modulating so the detector settles
+#define HITAGS_UID_BITS         32 // a Hitag S UID is 32 bits
+#define HITAGS_UID_SOF_BITS     3 // ADV UID response SOF is '111'
+#define HITAGS_UID_CAPTURE_MAX  256 // captured edge count cap
 // The Flipper comparator resolves the response at the BIT level (~256us steps), not PM3's
 // 128us half-period, so the captured falling-edge intervals come out at ~2x PM3's values:
 // they cluster at ~512 / 768 / 1024us (= 2/3/4 x 256). So the AC2K classification thresholds
 // are PM3's x2. The capture has no long leading quiet gap (it starts right in the response
 // after the warm-up), so the decode starts on the first response-sized edge, not on a gap.
-#define HITAGS_AC_START_MIN_US 280 // first falling edge >= this marks the response start
-#define HITAGS_AC_TWO_HALF_US 384 // ~512us cluster (PM3 25 T0 x2)
+#define HITAGS_AC_START_MIN_US  280 // first falling edge >= this marks the response start
+#define HITAGS_AC_TWO_HALF_US   384 // ~512us cluster (PM3 25 T0 x2)
 #define HITAGS_AC_THREE_HALF_US 656 // ~768us cluster (PM3 41 T0 x2)
-#define HITAGS_AC_FOUR_HALF_US 912 // ~1024us cluster (PM3 57 T0 x2)
+#define HITAGS_AC_FOUR_HALF_US  912 // ~1024us cluster (PM3 57 T0 x2)
 
 // ----------------------------------------------------------------------------
 // CRC-8 / Hitag1: poly 0x1D, init 0xFF, no reflection, MSB-first.
@@ -102,7 +103,8 @@ static size_t hitags_build_uid_req(uint8_t* tx) {
 static size_t hitags_build_select(uint8_t* tx, const uint8_t* uid) {
     size_t pos = 0;
     hitags_put_bits(tx, &pos, HITAGS_CMD_SELECT, 5);
-    for(uint8_t i = 0; i < 4; i++) hitags_put_byte(tx, &pos, uid[i]);
+    for(uint8_t i = 0; i < 4; i++)
+        hitags_put_byte(tx, &pos, uid[i]);
     hitags_put_byte(tx, &pos, hitags_crc8(tx, pos));
     return pos;
 }
@@ -120,7 +122,8 @@ static size_t hitags_build_write_page(uint8_t* tx, uint8_t page) {
 // byte-swap in hts_write_page is commented out), matching the EM4100 frame split.
 static size_t hitags_build_write_data(uint8_t* tx, const uint8_t* data) {
     size_t pos = 0;
-    for(uint8_t i = 0; i < 4; i++) hitags_put_byte(tx, &pos, data[i]);
+    for(uint8_t i = 0; i < 4; i++)
+        hitags_put_byte(tx, &pos, data[i]);
     hitags_put_byte(tx, &pos, hitags_crc8(tx, pos));
     return pos;
 }
